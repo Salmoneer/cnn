@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// NOTE: Write a neural network that takes a number and doubles it
-
 const int ITERATIONS = 2;
 
 float relu(float value) {
