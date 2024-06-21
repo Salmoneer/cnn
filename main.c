@@ -81,18 +81,19 @@ float model_function(float input) {
     return 2.0f * input + 5.0f;
 }
 
+void populate_dataset(Vector *inputs, Vector *outputs) {
+    assert(inputs->size == outputs->size);
+
+    for (int i = 0; i < inputs->size; i++) {
+        inputs->data[i] = (float)rand() / RAND_MAX;
+        outputs->data[i] = model_function(inputs->data[i]);
+    }
+}
+
 int main() {
     Vector training_inputs = make_vector(TRAINING_SET_SIZE);
-
-    for (int i = 0; i < TRAINING_SET_SIZE; i++) {
-        training_inputs.data[i] = (float)rand() / RAND_MAX;
-    }
-
     Vector training_outputs = make_vector(TRAINING_SET_SIZE);
-
-    for (int i = 0; i < TRAINING_SET_SIZE; i++) {
-        training_outputs.data[i] = model_function(training_inputs.data[i]);
-    }
+    populate_dataset(&training_inputs, &training_outputs);
 
     float node_weight = (float)rand() / RAND_MAX;
     float node_bias = (float)rand() / RAND_MAX;
