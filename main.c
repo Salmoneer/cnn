@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "vector.c"
 
 const float EPSILON = 0.00001f;
 
@@ -9,57 +10,6 @@ const float LEARNING_RATE = 0.01f;
 const int EPOCHS = 10000;
 
 const int TRAINING_SET_SIZE = 1000;
-
-typedef struct Vector {
-    size_t size;
-    float *data;
-} Vector;
-
-Vector make_vector(size_t size) {
-    float *data = malloc(size * sizeof(float));
-    if (data == NULL) {
-        printf("Failed allocation\n");
-    }
-    return (Vector){ .size = size, .data = data };
-}
-
-Vector apply_vector(Vector vector, float (*f)(float)) {
-    Vector out_vector = make_vector(vector.size);
-    for (int i = 0; i < vector.size; i++) {
-        out_vector.data[i] = f(vector.data[i]);
-    }
-    return out_vector;
-}
-
-Vector multiply_vector_scalar(Vector vector, float scalar) {
-    Vector out_vector = make_vector(vector.size);
-    for (int i = 0; i < vector.size; i++) {
-        out_vector.data[i] = vector.data[i] * scalar;
-    }
-    return out_vector;
-}
-
-Vector multiply_vector_vector(Vector vector1, Vector vector2) {
-    assert(vector1.size == vector2.size);
-
-    Vector out_vector = make_vector(vector1.size);
-    for (int i = 0; i < vector1.size; i++) {
-        out_vector.data[i] = vector1.data[i] * vector2.data[i];
-    }
-    return out_vector;
-}
-
-float mean_vector(Vector vector) {
-    assert(vector.size != 0);
-
-    float mean = 0;
-    for (int i = 0; i < vector.size; i++) {
-        mean += vector.data[i];
-    }
-    mean /= vector.size;
-
-    return mean;
-}
 
 float relu(float value) {
     if (value > 0) {
@@ -85,7 +35,7 @@ void populate_dataset(Vector *inputs, Vector *outputs) {
     assert(inputs->size == outputs->size);
 
     for (int i = 0; i < inputs->size; i++) {
-        inputs->data[i] = (float)rand() / RAND_MAX;
+        inputs->data[i] = (float)rand() / (float)RAND_MAX;
         outputs->data[i] = model_function(inputs->data[i]);
     }
 }
@@ -95,8 +45,8 @@ int main() {
     Vector training_outputs = make_vector(TRAINING_SET_SIZE);
     populate_dataset(&training_inputs, &training_outputs);
 
-    float node_weight = (float)rand() / RAND_MAX;
-    float node_bias = (float)rand() / RAND_MAX;
+    float node_weight = (float)rand() / (float)RAND_MAX;
+    float node_bias = (float)rand() / (float)RAND_MAX;
 
     for (int epoch = 0; epoch < EPOCHS; epoch++) {
         Vector errors = make_vector(TRAINING_SET_SIZE);
